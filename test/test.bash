@@ -17,22 +17,44 @@ fi
 
 colcon build
 
-# ノードの実行とログの保存
-timeout 20 bash -c "source $dir/.bashrc && ros2 run mypkg battery_status_publisher" &
+# ノードの実行
+source $dir/.bashrc
+ros2 run mypkg battery_status_publisher &
+PUBLISHER_PID=$!
 
-# トピックの購読結果をログに保存
+# トピックの準備を確認
+echo "Waiting for topics to be available..."
+for i in {1..10}; do
+    if ros2 topic list | grep -q "/battery/percent" && ros2 topic list | grep -q "/battery/power_plugged"; then
+        echo "Topics are now available."
+        break
+    fi
+    sleep 2
+done
+
+# トピックが準備されなければエラーを返す
+if ! ros2 topic list | grep -q "/battery/percent" || ! ros2 topic list | grep -q "/battery/power_plugged"; then
+    echo "Topics are not available. Exiting test."
+    kill $PUBLISHER_PID
+    exit 1
+fi
+
+# トピックの購読とログ保存
 timeout 20 bash -c "ros2 topic echo /battery/percent" > /tmp/battery_percent.log &
 timeout 20 bash -c "ros2 topic echo /battery/power_plugged" > /tmp/battery_power_plugged.log &
 
+# 十分な時間を待つ
 sleep 20
 
-# ログ内容の表示と確認
+# ノードの停止
+kill $PUBLISHER_PID
+
+# ログ内容の表示と検証
 echo "Battery Percent Log:"
 cat /tmp/battery_percent.log
 echo "Battery Power Plugged Log:"
 cat /tmp/battery_power_plugged.log
 
-# 検証
 if grep -q 'data:' /tmp/battery_percent.log && grep -q 'data:' /tmp/battery_power_plugged.log; then
     echo "Battery status messages found in logs"
     exit 0
