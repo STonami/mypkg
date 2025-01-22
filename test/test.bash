@@ -1,9 +1,8 @@
-#!/bin/bash
+#!/bin/bash -xv
+# SPDX-FileCopyrightText: 2025 Tonami Seki　　　　　
+# SPDX-License-Identifier: BSD-3-Clause
 
-# ROS 2 ワークスペースに移動
 cd ~/ros2_ws
-
-# パッケージをビルド
 colcon build
 
 # 環境設定

@@ -24,7 +24,6 @@ setup(
     entry_points={
         'console_scripts': [
             'battery_status_publisher = mypkg.battery_status_publisher:main',
-            'listener = mypkg.listener:main',
     ],
 },
 
