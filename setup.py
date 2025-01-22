@@ -1,5 +1,4 @@
 from setuptools import setup
-import os
 from glob import glob
 
 package_name = 'mypkg'
@@ -23,8 +22,9 @@ setup(
     license='BSD-3-Clause',
     tests_require=['pytest'],
     entry_points={
-    'console_scripts': [
-        'battery_status_publisher = mypkg.battery_status_publisher:main',
+        'console_scripts': [
+            'battery_status_publisher = mypkg.battery_status_publisher:main',
+            'listener = mypkg.listener:main',
     ],
 },
 

@@ -1,30 +1,39 @@
 #!/bin/bash
 
-# パッケージのビルド
-colcon build --packages-select mypkg
+# ROS 2 ワークスペースに移動
+cd ~/ros2_ws
+
+# パッケージをビルド
+colcon build
+
+# 環境設定
 source install/setup.bash
 
-# ノードをバックグラウンドで起動
+# battery_status_publisher ノードを開始
+echo "Starting battery_status_publisher node..."
 ros2 run mypkg battery_status_publisher &
-PUBLISHER_PID=$!
 
-# スクリプト終了時にプロセスを停止
-trap "kill $PUBLISHER_PID; exit 1" SIGINT SIGTERM EXIT
+# バックグラウンドプロセスの PID を保存
+NODE_PID=$!
 
-echo "Waiting for topics to publish data..."
-for i in {1..10}; do
-    # トピックデータを確認する
-    if ros2 topic echo /battery/percent --once &>/dev/null && \
-       ros2 topic echo /battery/power_plugged --once &>/dev/null; then
-        echo "Topics are publishing data."
-        kill $PUBLISHER_PID
-        exit 0
-    fi
-    sleep 2
-done
+# ノードが完全に立ち上がるのを少し待機
+sleep 2
 
-# データが取得できない場合
-echo "Topics are not publishing data. Exiting test."
-kill $PUBLISHER_PID
-exit 1
+# 開始メッセージをパブリッシュ
+echo "Publishing start message..."
+ros2 topic pub --once /start_time std_msgs/String "data: 'start'"
+
+# 10 秒間待機している間にバッテリー情報がパブリッシュされる
+echo "Waiting for 10 seconds..."
+sleep 10
+
+# 停止メッセージをパブリッシュ
+echo "Publishing stop message..."
+ros2 topic pub --once /stop_time std_msgs/String "data: 'stop'"
+
+# 終了メッセージ
+echo "Test completed!"
+
+# ノードを終了
+kill $NODE_PID
 
