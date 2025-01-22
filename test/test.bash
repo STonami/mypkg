@@ -34,6 +34,4 @@ ros2 topic pub --once /stop_time std_msgs/String "data: 'stop'"
 # 終了メッセージ
 echo "Test completed!"
 
-# ノードを終了
-kill $NODE_PID
 
