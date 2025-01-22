@@ -14,7 +14,7 @@
 
 ## ノードの説明
 
-###  ** `battery_status_publisher`**
+###  **`battery_status_publisher`**
 
 - **役割**:
   - バッテリーのパーセントを監視し、トピック `/battery/percents` にパブリッシュします。
