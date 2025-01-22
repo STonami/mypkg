@@ -1,7 +1,3 @@
-テスト環境の記述を削除したREADME.mdを以下に修正しました。
-
----
-
 # Battery Monitoring System
 
 [![license](https://img.shields.io/badge/license-BSD--3--Clause-green?style=flat)](https://github.com/STonami/mypkg?tab=BSD-3-Clause-1-ov-file)
