@@ -1,4 +1,4 @@
-# Battery Monitoring System
+# mypkg
 
 [![license](https://img.shields.io/badge/license-BSD--3--Clause-green?style=flat)](https://github.com/STonami/mypkg?tab=BSD-3-Clause-1-ov-file)
 
