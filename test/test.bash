@@ -1,34 +1,38 @@
 #!/bin/bash -xv
-# SPDX-FileCopyrightText: 2025 Tonami Seki　　　　　
+# SPDX-FileCopyrightText: 2025 Tonami Seki
 # SPDX-License-Identifier: BSD-3-Clause
 
-cd ~/ros2_ws
+# 使用するディレクトリを設定
+dir=~
+[ "$1" != "" ] && dir="$1"
+
+# ROS 2 ワークスペースに移動してビルド
+cd $dir/ros2_ws
 colcon build
+source $dir/.bashrc
 
-# 環境設定
-source install/setup.bash
-
-# battery_status_publisher ノードを開始
-echo "Starting battery_status_publisher node..."
-ros2 run mypkg battery_status_publisher &
-
-# バックグラウンドプロセスの PID を保存
+# ノードをバックグラウンドで実行
+ros2 run mypkg battery_status_publisher > /tmp/battery_status.log 2>&1 &
 NODE_PID=$!
 
-# ノードが完全に立ち上がるのを少し待機
-sleep 2
+# ノードがデータをパブリッシュするのを待つ
+sleep 5
 
-# 開始メッセージをパブリッシュ
-echo "Publishing start message..."
-ros2 topic pub --once /start_time std_msgs/String "data: 'start'"
+# トピックからメッセージを購読
+timeout 10 ros2 topic echo /battery/percents > /tmp/battery_status_test.log
 
-# 10 秒間待機している間にバッテリー情報がパブリッシュされる
-echo "Waiting for 10 seconds..."
-sleep 10
+# ノードを停止
+kill $NODE_PID
 
-# 停止メッセージをパブリッシュ
-echo "Publishing stop message..."
-ros2 topic pub --once /stop_time std_msgs/String "data: 'stop'"
+# ログの内容を検証
+grep -E 'Battery: [0-9]+\.[0-9]+%, Status: (Charging|Discharging), Time: [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' /tmp/battery_status_test.log > /dev/null
 
-# 終了メッセージ
-echo "Test completed!"
+# テスト結果の判定
+if [ $? -eq 0 ]; then
+    echo "Test Passed: Battery status messages detected."
+    exit 0
+else
+    echo "Test Failed: No valid battery status messages detected."
+    exit 1
+fi
+
