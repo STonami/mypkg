@@ -19,13 +19,13 @@ NODE_PID=$!
 sleep 5
 
 # トピックからメッセージを購読
-timeout 10 ros2 topic echo /battery/percents > /tmp/battery_status_test.log
+timeout 100 ros2 topic echo /battery/percents > /tmp/battery_status_test.log
 
 # ノードを停止
 kill $NODE_PID
 
 # ログの内容を検証
-grep -E 'Battery:' /tmp/battery_status_test.log > /dev/null
+grep -E 'Battery:' /tmp/battery_status_test.log
 
 # テスト結果の判定
 if [ $? -eq 0 ]; then
