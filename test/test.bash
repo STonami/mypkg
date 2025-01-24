@@ -32,5 +32,3 @@ ros2 topic pub --once /stop_time std_msgs/String "data: 'stop'"
 
 # 終了メッセージ
 echo "Test completed!"
-
-
