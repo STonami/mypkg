@@ -14,8 +14,14 @@ colcon build
 source $dir/.bashrc
 source $dir/ros2_ws/install/setup.bash
 
+ros2 run mypkg battery_status_publisher > /tmp/battery_status.log &
+
+sleep 5
+
 # ノードをバックグラウンドで実行
 timeout 10 ros2 topic echo /battery/percents > /tmp/battery_status_test.log
+
+ros2 topic list
 
 # ログの内容を検証
 if ros2 topic list | grep -q "battery"; then
