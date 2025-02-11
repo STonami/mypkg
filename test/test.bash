@@ -10,6 +10,7 @@ dir=~
 cd $dir/ros2_ws
 colcon build
 source $dir/.bashrc
+source $dir/ros2_ws/install/setup.bash
 
 # ノードをバックグラウンドで実行
 ros2 run mypkg battery_status_publisher > /tmp/battery_status.log 2>&1 &
@@ -25,7 +26,7 @@ timeout 10 ros2 topic echo /battery/percents > /tmp/battery_status_test.log
 kill $NODE_PID
 
 # ログの内容を検証
-if grep -q 'Battery:' /tmp/battery_status_test.log; then
+if grep -E 'Battery:' /tmp/battery_status_test.log; then
     echo "Test Passed: Battery status messages detected."
     exit 0
 else
