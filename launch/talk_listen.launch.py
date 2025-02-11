@@ -11,7 +11,7 @@ def generate_launch_description():
 
      talker = launch_ros.actions.Node(
          package='mypkg',
-         executable='battery',
+         executable='battery_status_publisher',
          )
      listener = launch_ros.actions.Node(
          package='mypkg',
