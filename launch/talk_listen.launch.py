@@ -10,12 +10,12 @@ import launch_ros.actions
 def generate_launch_description():
 
      talker = launch_ros.actions.Node(
-         package='mypkg',
-         executable='battery_status_publisher',
+         package='mypkg',      #パッケージの名前を指定
+         executable='powerwatch',  #実行するファイルの指定
          )
      listener = launch_ros.actions.Node(
          package='mypkg',
          executable='listener',
-         output='screen'
+         output='screen'        #ログを端末に出すための設定
                   )
      return launch.LaunchDescription([talker, listener])

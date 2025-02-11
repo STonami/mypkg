@@ -7,10 +7,10 @@ from std_msgs.msg import String
 import psutil
 from datetime import datetime
 
-class BatteryMonitor(Node):
+class PowerWatch(Node):
     def __init__(self):
-        super().__init__('battery_monitor')
-        self.publisher = self.create_publisher(String, '/battery/percents', 10)
+        super().__init__('powerwatch')
+        self.publisher = self.create_publisher(String, 'battery_status', 10)
         self.timer = self.create_timer(1.0, self.publish_battery_status)
 
     def publish_battery_status(self):
@@ -27,8 +27,8 @@ class BatteryMonitor(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    battery_monitor = BatteryMonitor()
-    rclpy.spin(battery_monitor)
+    power_watch = PowerWatch()
+    rclpy.spin(power_watch)
     power_watch.destroy_node()
     rclpy.shutdown()
 

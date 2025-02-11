@@ -23,7 +23,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'battery_status_publisher = mypkg.battery_status_publisher:main',
+            'powerwatch = mypkg.powerwatch:main',
+            'listener = mypkg.listener:main',
     ],
 },
 
