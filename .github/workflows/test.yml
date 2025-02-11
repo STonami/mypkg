@@ -1,13 +1,25 @@
 name: test
 on: push
 jobs:
-  test:
-    runs-on: ubuntu-22.04
-    container: ryuichiueda/ubuntu22.04-ros2:latest
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: build and test
+      - name: Set up ROS 2
+        uses: ros-tooling/setup-ros@v0.6
+        with:
+          required-ros-distributions: humble
+          
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build ROS 2 package
         run: |
-          rsync -av ./ /root/ros2_ws/src/mypkg
-          cd /root/ros2_ws
-          bash -xv ./src/mypkg/test/test.bash /root
+          cd ~/ros2_ws
+          colcon build
+          source install/setup.bash
+          export PATH=$HOME/ros2_ws/install/bin:$PATH
+
+      - name: Run test script
+        run: |
+          bash ~/ros2_ws/src/mypkg/test_script.sh
+
