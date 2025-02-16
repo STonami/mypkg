@@ -21,8 +21,8 @@ tmux new-session -d -s $SESSION_NAME "ros2 run mypkg battery_status_publisher > 
 sleep 5
 
 # バッテリーステータスを取得
-ros2 topic echo /battery/percents --once
-ros2 topic echo /battery/percents -n 1 > /tmp/battery_status_output.log
+ros2 topic echo /battery/percents -n 1
+ros2 topic echo /battery/percents --once > /tmp/battery_status_output.log
 
 # 結果の表示
 cat /tmp/battery_status_output.log
