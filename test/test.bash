@@ -13,12 +13,11 @@ cd $dir/ros2_ws || { echo "Failed to change directory"; exit 1; }
 colcon build || { echo "Build failed"; exit 1; }
 source $dir/.bashrc
 
-# tmux セッション名の設定
-SESSION_NAME="battery_monitor_session"
-tmux new-session -d -s $SESSION_NAME "ros2 run mypkg battery_status_publisher > $HOME/tmp/battery_status.log 2>&1"
 
 # ノードが起動するまで待機
 sleep 5
+
+timeout 10 ros2 run mypkg battery_status_publisher
 
 # バッテリーステータスを取得
 ros2 topic echo /battery/percents -n 1
