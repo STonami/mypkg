@@ -25,3 +25,10 @@ ros2 topic echo /battery/percents --once > /tmp/battery_status_output.log
 
 # 結果の表示
 cat /tmp/battery_status_output.log
+
+if grep -q 'Battery' /tmp/battery_status_output.log;then
+    echo "Test passed."
+else
+    echo "Test failed."
+    exit 1
+fi
