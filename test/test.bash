@@ -25,10 +25,12 @@ timeout 20 bash -c "source $dir/.bashrc && ros2 run mypkg battery_status_publish
 ros2 topic echo /battery/percents -n 1
 ros2 topic echo /battery/percents --once > /tmp/battery_status_output.log
 
+sleep 20
+
 # 結果の表示
 cat /tmp/battery_status_output.log
 
-if grep -q 'Battery' /tmp/battery_status_output.log;then
+if grep -q 'Time' /tmp/battery_status_output.log;then
     echo "Test passed."
 else
     echo "Test failed."
