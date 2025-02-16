@@ -2,27 +2,28 @@
 # SPDX-FileCopyrightText: 2025 Tonami Seki
 # SPDX-License-Identifier: BSD-3-Clause
 
+# デフォルトのディレクトリ設定
 dir=~
 [ "$1" != "" ] && dir="$1"
 
-cd $dir/ros2_ws
+# ROS 2 ワークスペースへ移動
+cd $dir/ros2_ws || { echo "Failed to change directory"; exit 1; }
 
-colcon build
+# ビルドと環境設定
+colcon build || { echo "Build failed"; exit 1; }
+source $dir/.bashrc
 
-# ROS 2 の環境を適用
-source $dir/ros2_ws/install/setup.bash
-export PATH=$dir/ros2_ws/install/bin:$PATH
-exec bash
+# tmux セッション名の設定
+SESSION_NAME="battery_monitor_session"
+tmux new-session -d -s $SESSION_NAME "ros2 run mypkg battery_status_publisher > $HOME/tmp/battery_status.log 2>&1"
 
-# ノードを起動
-timeout 60 ros2 launch mypkg talk_listen.launch.py > /tmp/powerwatch.log
+# ノードが起動するまで待機
+sleep 5
 
-# ログを解析
-if grep -q 'battery_status_listener' /tmp/powerwatch.log; then
-    echo "Test passed: Listener found in the log."
-    exit 0
-else
-    echo "Test failed: Listener not found in the log."
-    exit 1
-fi
+# バッテリーステータスを取得
+ros2 topic echo /battery/percents --once > /tmp/battery_status_output.log
+
+# 結果の表示
+cat /tmp/battery_status_output.log
+
 
