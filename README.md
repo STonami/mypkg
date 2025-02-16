@@ -1,5 +1,6 @@
 # mypkg
 
+[![test](https://github.com/STonami/battery_status_publisher/actions/workflows/test.yml/badge.svg)](https://github.com/STonami/battery_status_publisher/actions/workflows/test.yml)
 [![license](https://img.shields.io/badge/license-BSD--3--Clause-green?style=flat)](https://github.com/STonami/mypkg?tab=BSD-3-Clause-1-ov-file)
 
 ## 概要
