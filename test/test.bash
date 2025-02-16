@@ -25,5 +25,3 @@ ros2 topic echo /battery/percents --once > /tmp/battery_status_output.log
 
 # 結果の表示
 cat /tmp/battery_status_output.log
-
-
