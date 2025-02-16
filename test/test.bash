@@ -17,7 +17,7 @@ source $dir/.bashrc
 # ノードが起動するまで待機
 sleep 5
 
-ros2 run mypkg battery_status_publisher
+timeout 20 ros2 run mypkg battery_status_publisher
 
 # バッテリーステータスを取得
 ros2 topic echo /battery/percents -n 1
